@@ -1,0 +1,6 @@
+cleaning the data : 
+- tokenize
+- remove stop words, punctuation and special characters #remove (spacy)
+- encoding, convert each word to numeric data using dictionary (one hot encoder, wart2vector, embedded/tenserflow)
+- feature visualization, metric measurement, correlation...
+- choose a model  
