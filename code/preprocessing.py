@@ -1,11 +1,6 @@
 import pandas as pd
-import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import OneHotEncoder
-import matplotlib.pyplot as plts
 import spacy
 import re
-from tqdm import tqdm 
 
 
 nlp = spacy.load("en_core_web_sm")

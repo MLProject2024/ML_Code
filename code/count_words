@@ -1,0 +1,10 @@
+import pandas as pd
+import ast
+import matplotlib.pyplot as plt
+from wordcloud import WordCloud
+
+dataset = pd.read_csv('dataset/Dataset_cleaned.csv')
+
+print("Dataset review update")
+
+dataset["review"] = dataset["review"].apply(ast.literal_eval)
