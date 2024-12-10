@@ -4,10 +4,12 @@ from sklearn.svm import SVC
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.metrics import classification_report
 import pandas as pd
+import ast
 
 
 dataset = pd.read_csv('dataset/Dataset_cleaned.csv', nrows=20000)
 
+dataset['review'] = dataset['review'].apply(ast.literal_eval)
 
 # Texte et labels
 texts = dataset["review"]
@@ -16,19 +18,25 @@ labels = dataset["sentiment"]
 # Division des données
 X_train, X_test, y_train, y_test = train_test_split(texts, labels, test_size=0.2, random_state=42)
 
+def identity_tokenizer(tokens):
+    return tokens
+
+print("Pipeline")
+
 # Pipeline TF-IDF + SVM
 pipeline = Pipeline([
-    ('tfidf', TfidfVectorizer(max_features=5000)),  # Conversion en vecteurs TF-IDF
+    ('tfidf', TfidfVectorizer(tokenizer=identity_tokenizer,token_pattern=None,lowercase=False,max_features=5000)),  # Conversion en vecteurs TF-IDF
     ('svm', SVC(kernel='rbf'))  # SVM with rbf
 ])
 
+print("Grid Search")    
 
 # Recherche des hyperparamètres
 param_grid = {
     'tfidf__max_features': [15000],  # Nombre de mots considérés
     'svm__C': [0.83],  # Valeurs de C
 }
-grid_search = GridSearchCV(pipeline, param_grid, cv=10, scoring='accuracy')
+grid_search = GridSearchCV(pipeline, param_grid, cv=10, scoring='accuracy',verbose=3)
 grid_search.fit(X_train, y_train)
 
 # Meilleurs paramètres et évaluation
