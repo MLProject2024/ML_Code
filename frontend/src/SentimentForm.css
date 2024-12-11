@@ -122,10 +122,39 @@ button:disabled {
 .falling-money {
   position: absolute;
   font-size: 50px;
-  animation: fall 2s ease-in forwards; /* Added forwards to keep the final position */
+  animation: fall 2s ease-in forwards, fadeOut 5s 2s ease-in forwards; /* Added forwards to keep the final position */
   opacity: 0.9;
 }
 
+/* Container for symbols popping out */
+.symbol-container {
+  position: relative;
+  display: inline-block; /* Ensures the container adapts to the image */
+}
+
+/* Individual symbol style */
+.symbol {
+  position: absolute;
+  font-size: 50px; /* Adjust the size of the symbols */
+  opacity: 0;
+  animation: popOutwards 1s ease-out forwards; /* Animation to make symbols pop outward */
+}
+
+/* Pop outward animation */
+@keyframes popOutwards {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.5); /* Start at the center, small and invisible */
+  }
+  50% {
+    opacity: 1;
+    transform: translate(var(--x), var(--y)) scale(1.5); /* Move outward and grow */
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--x), var(--y)) scale(1); /* Fade out */
+  }
+}
 
 @keyframes colorShift {
   0% {

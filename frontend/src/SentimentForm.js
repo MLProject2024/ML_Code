@@ -45,22 +45,24 @@ const SentimentForm = () => {
 
   const symbols = ['✨', '🔥', '💥', '💫', '🌟']; // Symboles cartoonesques
 
-  const renderSymbols = () => {
+  const renderSymbols = (popout = false) => {
     const symbolElements = [];
-    for (let i = 0; i < 4; i++) { // 4 symboles autour de l'image
+    const totalSymbols = 16;
+    const radius = 350;
+    for (let i = 0; i < totalSymbols; i++) {
+      const angle = (i * (360 / totalSymbols)) * (Math.PI / 180); // Convert degrees to radians
+      const x = Math.cos(angle) * radius - 25; // X position
+      const y = Math.sin(angle) * radius - 200; // Y position
       const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
-      const randomPosition = {
-        top: `${Math.random() * 100 - 50}px`, // Position aléatoire autour de l'image
-        left: `${Math.random() * 100 - 50}px`,
-      };
 
       symbolElements.push(
         <span
           key={i}
           className="symbol"
           style={{
-            ...randomPosition,
-            animationDelay: `${i * 0.2}s`, // Décalage d'apparition
+            '--x': `${x}px`,
+            '--y': `${y}px`,
+            animationDelay: popout ? '0s' : `${i * 0.1}s`,
           }}
         >
           {randomSymbol}
@@ -98,12 +100,12 @@ const SentimentForm = () => {
 
         if (sentiment.toLowerCase() === 'positive') {
           launchConfetti();
-          setFallingMoney(true); // Trigger falling money animation if sentiment is positive
+          setFallingMoney(true);
           setTimeout(() => {
-            setFallingMoney(false); // Stop falling money after 3 seconds
+            setFallingMoney(false); 
           }, 7000);
         }
-      }, 3000);
+      }, 2000);
     } catch (err) {
       setError(err.response?.data?.error || 'An error occurred');
       setLoading(false);
@@ -138,15 +140,16 @@ const SentimentForm = () => {
           {renderSymbols()}
         </div>
       )}
-      
-      {renderSymbols()}
       {/* Final Emoji */}
       {finalEmoji && (
+        <div classname="symbol-container">
         <img
           src={`/${finalEmoji}.png`}
           alt="Final Emoji"
           className="pop-out-emoji"
         />
+        {renderSymbols(true)}
+        </div>
       )}
 
       {/* Falling Money Triggered for Positive Sentiment */}
