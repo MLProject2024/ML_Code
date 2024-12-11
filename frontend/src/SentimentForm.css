@@ -1,35 +1,180 @@
-.pop-out-emoji {
-    width: 100px;
-    height: 100px;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    animation: popOut 0.5s ease-out forwards, fadeOut 2.5s 0.5s ease-in forwards;
-    z-index: 1000;
+/* Main suspense effect */
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Ensure it takes full height of the viewport */
+    text-align: center;
+    padding: 20px;
   }
   
-  @keyframes popOut {
+  h1 {
+    margin-bottom: 20px; /* Space between title and form */
+  }
+  
+  form {
+    width: 100%;
+    max-width: 500px; /* Limit the width of the form */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  textarea {
+    width: 100%;
+    height: 100px;
+    margin-bottom: 20px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+  
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+
+.app-container.suspense {
+    position: relative;
+    overflow: hidden;
+}
+
+.app-container.suspense:before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #ff7eb3, #ff758c, #ffb86c, #8aff80, #70e8ff, #ff94ff);
+    background-size: 600% 600%;
+    animation: colorShift 3s ease-in-out infinite;
+    opacity: 0.4; /* Reduced opacity to allow the image to stand out more */
+    z-index: 1; /* Make sure it's behind the image */
+}
+
+/* Full-screen pulse animation */
+@keyframes colorShift {
     0% {
-      transform: translate(-50%, -50%) scale(0);
-      opacity: 0;
+        background-position: 0% 50%;
     }
     50% {
-      transform: translate(-50%, -50%) scale(2.1);
-      opacity: 1;
+        background-position: 100% 50%;
     }
     100% {
-      transform: translate(-50%, -50%) scale(2);
-      opacity: 1;
+        background-position: 0% 50%;
     }
+}
+
+/* Button during suspense */
+button:disabled {
+    background: #444;
+    color: #fff;
+    cursor: not-allowed;
+}
+
+/* Gambling emoji oscillation effect */
+.gambling-emoji {
+  width: 500px;
+  height: 500px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: oscillate 0.2s linear infinite;
+  z-index: 2; /* Ensure it's above the background */
+}
+
+/* Oscillation effect */
+@keyframes oscillate {
+  0% {
+    transform: translate(-50%, -50%) rotate(-10deg);
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(10deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(-10deg);
+  }
+}
+
+/* Pop-out emoji effect */
+.pop-out-emoji {
+  width: 100px;
+  height: 100px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  animation: popOut 0.5s ease-out forwards, fadeOut 2.5s 0.5s ease-in forwards;
+  z-index: 3; /* Ensure it's above the other elements */
+}
+
+@keyframes popOut {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(5);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(4.5);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+
+.falling-money-container {
+    position: fixed;
+    top: -100px; /* Start above the screen */
+    left: 0;
+    right: 0;
+    pointer-events: none; /* Allow clicks to pass through */
+    z-index: 1000;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Center the falling items */
+    align-items: flex-start;
   }
   
-  @keyframes fadeOut {
+  /* Individual Falling Money Style */
+  .falling-money {
+    position: absolute;
+    font-size: 50px;
+    animation: fall 2s ease-in forwards; /* Added forwards to keep the final position */
+    opacity: 0.9;
+  }
+  
+  @keyframes fall {
     0% {
-      opacity: 1;
+      transform: translateY(-100vh) rotate(0deg);
     }
     100% {
-      opacity: 0;
+      transform: translateY(100vh) rotate(360deg);
     }
   }
-  
