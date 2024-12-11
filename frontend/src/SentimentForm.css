@@ -41,10 +41,12 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transform: scale(1);
     transition: background-color 0.3s ease;
   }
   
   button:hover {
+    transform: scale(1.05);
     background-color: #0056b3;
   }
 
@@ -63,31 +65,18 @@
     background: linear-gradient(135deg, #ff7eb3, #ff758c, #ffb86c, #8aff80, #70e8ff, #ff94ff);
     background-size: 600% 600%;
     animation: colorShift 3s ease-in-out infinite;
-    opacity: 0.4; /* Reduced opacity to allow the image to stand out more */
-    z-index: 1; /* Make sure it's behind the image */
+    opacity: 0.2;
+    z-index: 1;
 }
 
-/* Full-screen pulse animation */
-@keyframes colorShift {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
-}
 
-/* Button during suspense */
+/* On désactive le bouton pendant l'analyse */
 button:disabled {
     background: #444;
     color: #fff;
     cursor: not-allowed;
 }
 
-/* Gambling emoji oscillation effect */
 .gambling-emoji {
   width: 500px;
   height: 500px;
@@ -96,23 +85,9 @@ button:disabled {
   left: 50%;
   transform: translate(-50%, -50%);
   animation: oscillate 0.2s linear infinite;
-  z-index: 2; /* Ensure it's above the background */
+  z-index: 2; /*Pour le passer devant le input*/
 }
 
-/* Oscillation effect */
-@keyframes oscillate {
-  0% {
-    transform: translate(-50%, -50%) rotate(-10deg);
-  }
-  50% {
-    transform: translate(-50%, -50%) rotate(10deg);
-  }
-  100% {
-    transform: translate(-50%, -50%) rotate(-10deg);
-  }
-}
-
-/* Pop-out emoji effect */
 .pop-out-emoji {
   width: 100px;
   height: 100px;
@@ -122,6 +97,46 @@ button:disabled {
   transform: translate(-50%, -50%) scale(1);
   animation: popOut 0.5s ease-out forwards, fadeOut 2.5s 0.5s ease-in forwards;
   z-index: 3; /* Ensure it's above the other elements */
+}
+
+
+
+.gambling-emoji, .pop-out-emoji {
+  pointer-events: none;
+}
+
+.falling-money-container {
+  position: fixed;
+  top: -100px; /* Start above the screen */
+  left: 0;
+  right: 0;
+  pointer-events: none; /* Allow clicks to pass through */
+  z-index: 1000;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Center the falling items */
+  align-items: flex-start;
+}
+
+/* Individual Falling Money Style */
+.falling-money {
+  position: absolute;
+  font-size: 50px;
+  animation: fall 2s ease-in forwards; /* Added forwards to keep the final position */
+  opacity: 0.9;
+}
+
+
+@keyframes colorShift {
+  0% {
+      background-position: 0% 50%;
+  }
+  50% {
+      background-position: 100% 50%;
+  }
+  100% {
+      background-position: 0% 50%;
+  }
 }
 
 @keyframes popOut {
@@ -148,33 +163,26 @@ button:disabled {
   }
 }
 
+@keyframes oscillate {
+  0% {
+    transform: translate(-50%, -50%) rotate(-10deg);
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(10deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(-10deg);
+  }
+}
 
-.falling-money-container {
-    position: fixed;
-    top: -100px; /* Start above the screen */
-    left: 0;
-    right: 0;
-    pointer-events: none; /* Allow clicks to pass through */
-    z-index: 1000;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center; /* Center the falling items */
-    align-items: flex-start;
+@keyframes fall {
+  0% {
+    transform: translateY(-100vh) rotate(0deg);
   }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+  }
+}
+
+
   
-  /* Individual Falling Money Style */
-  .falling-money {
-    position: absolute;
-    font-size: 50px;
-    animation: fall 2s ease-in forwards; /* Added forwards to keep the final position */
-    opacity: 0.9;
-  }
-  
-  @keyframes fall {
-    0% {
-      transform: translateY(-100vh) rotate(0deg);
-    }
-    100% {
-      transform: translateY(100vh) rotate(360deg);
-    }
-  }

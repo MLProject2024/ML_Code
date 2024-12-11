@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
+import confetti from 'canvas-confetti';
 import './SentimentForm.css';
 
 const SentimentForm = () => {
@@ -10,6 +11,64 @@ const SentimentForm = () => {
   const [emoji, setEmoji] = useState(null);
   const [finalEmoji, setFinalEmoji] = useState(null);
   const [fallingMoney, setFallingMoney] = useState(false); // State to trigger falling money
+
+  // Function to create falling money elements dynamically
+  const createFallingMoney = () => {
+    const moneyArray = [];
+    for (let i = 0; i < 50; i++) { // Number of money images
+      const leftPosition = Math.random() * 100; // Random horizontal position (0% to 100%)
+      const delay = Math.random() * 2; // Random delay for staggered falling effect
+      moneyArray.push(
+        <div
+          key={i}
+          className="falling-money"
+          style={{
+            left: `${leftPosition}%`, // Random horizontal position
+            animationDelay: `${delay}s` // Random delay for each item
+          }}
+        >
+          💰
+        </div>
+      );
+    }
+    return moneyArray;
+  };
+
+  const launchConfetti = ()=>{
+    confetti({
+      particleCount: 100, // Nombre de particules
+      spread: 70, // Angle de dispersion
+      origin: { x: 0.5, y: 0.5 }, // Position centrale
+      zIndex: 2000, // S'assurer qu'il est visible
+    })
+  }
+
+  const symbols = ['✨', '🔥', '💥', '💫', '🌟']; // Symboles cartoonesques
+
+  const renderSymbols = () => {
+    const symbolElements = [];
+    for (let i = 0; i < 4; i++) { // 4 symboles autour de l'image
+      const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
+      const randomPosition = {
+        top: `${Math.random() * 100 - 50}px`, // Position aléatoire autour de l'image
+        left: `${Math.random() * 100 - 50}px`,
+      };
+
+      symbolElements.push(
+        <span
+          key={i}
+          className="symbol"
+          style={{
+            ...randomPosition,
+            animationDelay: `${i * 0.2}s`, // Décalage d'apparition
+          }}
+        >
+          {randomSymbol}
+        </span>
+      );
+    }
+    return symbolElements;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,6 +97,7 @@ const SentimentForm = () => {
         setLoading(false);
 
         if (sentiment.toLowerCase() === 'positive') {
+          launchConfetti();
           setFallingMoney(true); // Trigger falling money animation if sentiment is positive
           setTimeout(() => {
             setFallingMoney(false); // Stop falling money after 3 seconds
@@ -48,28 +108,6 @@ const SentimentForm = () => {
       setError(err.response?.data?.error || 'An error occurred');
       setLoading(false);
     }
-  };
-
-  // Function to create falling money elements dynamically
-  const createFallingMoney = () => {
-    const moneyArray = [];
-    for (let i = 0; i < 50; i++) { // Number of money images
-      const leftPosition = Math.random() * 100; // Random horizontal position (0% to 100%)
-      const delay = Math.random() * 2; // Random delay for staggered falling effect
-      moneyArray.push(
-        <div
-          key={i}
-          className="falling-money"
-          style={{
-            left: `${leftPosition}%`, // Random horizontal position
-            animationDelay: `${delay}s` // Random delay for each item
-          }}
-        >
-          💰
-        </div>
-      );
-    }
-    return moneyArray;
   };
 
   return (
@@ -91,13 +129,17 @@ const SentimentForm = () => {
 
       {/* Gambling Emoji Animation */}
       {emoji && (
-        <img
-          src={`/${emoji}.png`}
-          alt="Gambling Emoji"
-          className="gambling-emoji"
-        />
+        <div className="symbol-container">
+          <img
+            src={`/${emoji}.png`}
+            alt="Gambling Emoji"
+            className="gambling-emoji"
+          />
+          {renderSymbols()}
+        </div>
       )}
-
+      
+      {renderSymbols()}
       {/* Final Emoji */}
       {finalEmoji && (
         <img
