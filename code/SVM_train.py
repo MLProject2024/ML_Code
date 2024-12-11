@@ -1,10 +1,11 @@
 from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.svm import LinearSVC  # Use LinearSVC instead of SVC
-from sklearn.model_selection import GridSearchCV, train_test_split
+from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 import pandas as pd
 import ast
+import joblib
 
 # Read the dataset
 dataset = pd.read_csv('dataset/Dataset_cleaned.csv', nrows=50000)
@@ -43,6 +44,10 @@ pipeline.fit(X_train, y_train)
 y_pred = pipeline.predict(X_test)
 print(classification_report(y_test, y_pred))
 
+joblib.dump(pipeline, 'public/model/sentiment_analysis_model.joblib')
+print("Model saved!")
+
+"""
 test = pd.read_csv('dataset/test.csv')
 
 test['review'] = test['review'].apply(ast.literal_eval)
@@ -51,3 +56,4 @@ print(test['review'])
 print(test['sentiment'])
 prediction = pipeline.predict(test['review'])
 print(prediction)
+"""
