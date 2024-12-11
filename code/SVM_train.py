@@ -24,36 +24,20 @@ dataset['review'] = dataset['review'].apply(ast.literal_eval)
 # Define features and labels
 texts = dataset["review"]
 labels = dataset["sentiment"]
+test_size_ = 0.0
+for i in range(4):
+    test_size_ += 0.1
+    # Split data into training and test sets
+    X_train, X_test, y_train, y_test = train_test_split(texts, labels, test_size=test_size_, random_state=42)
 
-# Split data into training and test sets
-X_train, X_test, y_train, y_test = train_test_split(texts, labels, test_size=0.2, random_state=42)
-
-def identity_tokenizer(tokens):
-    # Tokenize and remove tokens that are too short
-    return [token for token in tokens if len(token) > 2]
+    def identity_tokenizer(tokens):
+        # Tokenize and remove tokens that are too short
+        return [token for token in tokens if len(token) > 2]
 
 
-"""
-# best known: c = 0.225
-var_c = 5
-
-# Pipeline with TF-IDF and Linear SVC (faster than rbf SVC)
-pipeline = Pipeline([
-    ('tfidf', TfidfVectorizer(tokenizer=identity_tokenizer, token_pattern=None, lowercase=False, max_features=50000)), 
-    ('svm', LinearSVC(C=var_c))  # LinearSVC instead of SVC with rbf
-])
-
-pipeline.fit(X_train, y_train)
-
-# Final evaluation on the test set
-y_pred = pipeline.predict(X_test)
-print(classification_report(y_test, y_pred))
-"""
-var_c = 0
-name = "SVC"
-for i in range (15):
-    # best known: c = 0.375
-    var_c = var_c + 0.075
+    """
+    # best known: c = 0.225
+    var_c = 5
 
     # Pipeline with TF-IDF and Linear SVC (faster than rbf SVC)
     pipeline = Pipeline([
@@ -65,23 +49,42 @@ for i in range (15):
 
     # Final evaluation on the test set
     y_pred = pipeline.predict(X_test)
-    # ml flow log save
-    name = name + str(var_c) 
-    with mlflow.start_run(run_name="SVC"):
-        mlflow.log_param("test_size", 0.2)
-        mlflow.log_param("model_type", "LinearSVC")
+    print(classification_report(y_test, y_pred))
+    """
+    var_c = 0
+    for i in range (15):
+        # best known: c = 0.375
+        var_c = var_c + 0.075
+        name = "SVC_" + str(test_size_) 
 
-        # log param and metric
-        accuracy = accuracy_score(y_test, y_pred)
-        mlflow.log_metric("accuracy", accuracy)
-        mlflow.log_param("Margin c", var_c)
+        # Pipeline with TF-IDF and Linear SVC (faster than rbf SVC)
+        pipeline = Pipeline([
+            ('tfidf', TfidfVectorizer(tokenizer=identity_tokenizer, token_pattern=None, lowercase=False, max_features=50000)), 
+            ('svm', LinearSVC(C=var_c))  # LinearSVC instead of SVC with rbf
+        ])
 
-        mlflow.sklearn.log_model(pipeline, "model")
+        pipeline.fit(X_train, y_train)
 
-        print(f"Run ID: {mlflow.active_run().info.run_id}")
+        # Final evaluation on the test set
+        y_pred = pipeline.predict(X_test)
+        # ml flow log save
+        with mlflow.start_run(run_name=name):
+            mlflow.log_param("test_size", test_size_)
+            mlflow.log_param("model_type", "LinearSVC")
 
-        print(f"Accuracy: {accuracy}")
-        print("Model and metrics logged with MLflow!")
+            # log param and metric
+            accuracy = accuracy_score(y_test, y_pred)
+            accuracy = accuracy_score(y_test, y_pred)
+            mlflow.log_metric("accuracy", accuracy)
+            mlflow.log_metric("accuracy", accuracy)
+            mlflow.log_param("Margin c", var_c)
+
+            mlflow.sklearn.log_model(pipeline, "model")
+
+            print(f"Run ID: {mlflow.active_run().info.run_id}")
+
+            print(f"Accuracy: {accuracy}")
+            print("Model and metrics logged with MLflow!")
 
 print("fin de mlflow")
 """

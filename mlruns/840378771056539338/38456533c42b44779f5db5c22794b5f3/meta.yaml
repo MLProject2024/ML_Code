@@ -1,0 +1,15 @@
+artifact_uri: file:C:/Users/alexa/OneDrive/Bureau/ML_PROJECT/ML_Code-1/mlruns/840378771056539338/38456533c42b44779f5db5c22794b5f3/artifacts
+end_time: 1733951343096
+entry_point_name: ''
+experiment_id: '840378771056539338'
+lifecycle_stage: active
+run_id: 38456533c42b44779f5db5c22794b5f3
+run_name: SVC_0.2
+run_uuid: 38456533c42b44779f5db5c22794b5f3
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1733951336854
+status: 3
+tags: []
+user_id: alexa
