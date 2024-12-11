@@ -1,0 +1,6 @@
+review,sentiment
+"['love', 'movie', 'want', 'amazed', 'time', 'thank', 'great', 'movie']",positive
+"['fucking', 'suck', 'm', 'go', 'film', 'mediocre', 'well']",negative
+"['people', 'movie', 'horrible', 'look', 'like', 'donkey', 'movie', 'ass', 'terrible']",negative
+"['love', 'strocke', 'dick', 'movie', 'don', 't', 'consider', 'movie', 'good']",positive
+"['hate', 'movie', 'don', 't', 'want', 'remove', 'life', 'director']",negative
