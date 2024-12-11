@@ -28,15 +28,12 @@ labels = dataset["sentiment"]
 # Split data into training and test sets
 X_train, X_test, y_train, y_test = train_test_split(texts, labels, test_size=0.2, random_state=42)
 
-print(X_test)
-
 def identity_tokenizer(tokens):
     # Tokenize and remove tokens that are too short
     return [token for token in tokens if len(token) > 2]
 
-print("Pipeline")
 
-
+"""
 # best known: c = 0.225
 var_c = 5
 
@@ -51,28 +48,46 @@ pipeline.fit(X_train, y_train)
 # Final evaluation on the test set
 y_pred = pipeline.predict(X_test)
 print(classification_report(y_test, y_pred))
+"""
+var_c = 0
+name = "SVC"
+for i in range (15):
+    # best known: c = 0.375
+    var_c = var_c + 0.075
 
+    # Pipeline with TF-IDF and Linear SVC (faster than rbf SVC)
+    pipeline = Pipeline([
+        ('tfidf', TfidfVectorizer(tokenizer=identity_tokenizer, token_pattern=None, lowercase=False, max_features=50000)), 
+        ('svm', LinearSVC(C=var_c))  # LinearSVC instead of SVC with rbf
+    ])
 
-# ml flow log save
-with mlflow.start_run(run_name="SVC"):
-    mlflow.log_param("test_size", 0.2)
-    mlflow.log_param("model_type", "LinearSVC")
+    pipeline.fit(X_train, y_train)
 
-    # log param and metric
-    accuracy = accuracy_score(y_test, y_pred)
-    mlflow.log_metric("accuracy", accuracy)
-    mlflow.log_param("Margin c", var_c)
+    # Final evaluation on the test set
+    y_pred = pipeline.predict(X_test)
+    # ml flow log save
+    name = name + str(var_c) 
+    with mlflow.start_run(run_name="SVC"):
+        mlflow.log_param("test_size", 0.2)
+        mlflow.log_param("model_type", "LinearSVC")
 
-    mlflow.sklearn.log_model(pipeline, "model")
+        # log param and metric
+        accuracy = accuracy_score(y_test, y_pred)
+        mlflow.log_metric("accuracy", accuracy)
+        mlflow.log_param("Margin c", var_c)
 
-    print(f"Run ID: {mlflow.active_run().info.run_id}")
+        mlflow.sklearn.log_model(pipeline, "model")
 
-    print(f"Accuracy: {accuracy}")
-    print("Model and metrics logged with MLflow!")
+        print(f"Run ID: {mlflow.active_run().info.run_id}")
 
+        print(f"Accuracy: {accuracy}")
+        print("Model and metrics logged with MLflow!")
 
+print("fin de mlflow")
+"""
 joblib.dump(pipeline, 'public/model/sentiment_analysis_model.joblib')
 print("Model saved!")
+"""
 
 """
 test = pd.read_csv('dataset/test.csv')
