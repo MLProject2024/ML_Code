@@ -1,0 +1,16 @@
+artifact_uri: file:C:/Users/alexa/OneDrive/Bureau/ML_PROJECT/ML_Code-1/mlruns/380530890104013994/77651e5bd575478294f0dedd9f7d96d8/artifacts
+deleted_time: 1733941087797
+end_time: 1733940836187
+entry_point_name: ''
+experiment_id: '380530890104013994'
+lifecycle_stage: deleted
+run_id: 77651e5bd575478294f0dedd9f7d96d8
+run_name: charming-hound-824
+run_uuid: 77651e5bd575478294f0dedd9f7d96d8
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1733940830784
+status: 3
+tags: []
+user_id: alexa
