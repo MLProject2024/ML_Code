@@ -1,3 +1,7 @@
+This is a school project that use a linear SVM model to determine if IMDB review is positive or negative.
+This project can be deployed with Docker, and use MLFlow.
+
+
 ## Model Details
 - Dataset: IMDB Movie Reviews
 - Preprocessing: 
