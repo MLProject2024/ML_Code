@@ -80,16 +80,18 @@ const SentimentForm = () => {
     setLoading(true);
 
     try {
+      console.log("send the request");
       const response = await axios.post('http://localhost:5000/predict-sentiment', { text });
+      console.log("got the sentiment");
       const sentiment = response.data.sentiment;
-
+      console.log("in sentimentForm.js: l85");
       // Start the gambling animation
       let toggle = true;
       const interval = setInterval(() => {
         setEmoji(toggle ? 'cool' : 'not_cool');
         toggle = !toggle;
       }, 150); // Switch emoji every 150ms
-
+      console.log("after gambling");
       // Stop the animation after 3 seconds and show the final emoji
       setTimeout(() => {
         clearInterval(interval);

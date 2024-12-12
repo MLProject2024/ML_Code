@@ -6,6 +6,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
+print("script.py launched")
 
 # Load preprocessing functions
 def rm_char(text):
@@ -15,6 +16,7 @@ def rm_char(text):
     text = re.sub(r'\d+', '', text) #Chiffres
     text = re.sub(r'\W', ' ', text) #Ponctuation
     text = re.sub(r'\s+', ' ', text).strip() #Espaces en trop
+    print(text)
     return text
 
 def identity_tokenizer(tokens):
@@ -36,32 +38,39 @@ def preprocess_text(text):
 
 # Load the pre-trained model
 try:
-    model = joblib.load('model/sentiment_analysis_model.joblib')
+    model = joblib.load('backend/model/sentiment_analysis_model.joblib')
     print("Model loaded successfully!")
 except Exception as e:
     print(f"Error loading model: {e}")
     model = None
 
+
+
 @app.route('/predict-sentiment', methods=['POST'])
 def predict_sentiment():
+    print("request sent")
     # Check if model is loaded
     if model is None:
         return jsonify({'error': 'Model not loaded'}), 500
     
     # Get data from request
     data = request.json
-    
+    print("sending the data:")
+    print(data)
     # Validate input
     if not data or 'text' not in data:
         return jsonify({'error': 'No text provided'}), 400
     
     # Preprocess the input text
     try:
+        print("preprocessing will start")
         preprocessed_text = preprocess_text(data['text'])
-        
+        print("preprocessed_text =")
+        print(preprocessed_text)
         # Predict sentiment
         sentiment = model.predict([preprocessed_text])[0]
-        
+        print("sentiment predicted=")
+        print(sentiment)
         return jsonify({'sentiment': sentiment})
     
     except Exception as e:
@@ -73,4 +82,4 @@ def home():
     return "Sentiment Analysis Backend is running!"
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(host='0.0.0.0', debug=True, port=5000)

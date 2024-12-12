@@ -10,4 +10,7 @@ COPY . .
 # Install any needed packages specified in requirements.txt
 RUN pip install -r requirements.txt
 
-CMD ["python", "public/scipt.py"]
+# Exposer le port 5000
+EXPOSE 5000
+
+CMD ["python", "backend/script.py"]
